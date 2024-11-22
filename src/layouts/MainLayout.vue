@@ -1,106 +1,101 @@
 <template>
-  <q-layout view="lHh Lpr lFf">
-    <q-header elevated>
-      <q-toolbar>
-        <q-btn
-          flat
-          dense
-          round
-          icon="menu"
-          aria-label="Menu"
-          @click="toggleLeftDrawer"
-        />
+  <div class="q-pa-md">
+        <q-layout view="hHh Lpr lff">
 
-        <q-toolbar-title>
-          Quasar App
-        </q-toolbar-title>
-
-        <div>Quasar v{{ $q.version }}</div>
-      </q-toolbar>
-    </q-header>
-
-    <q-drawer
-      v-model="leftDrawerOpen"
-      show-if-above
-      bordered
-    >
-      <q-list>
-        <q-item-label
-          header
-        >
-          Essential Links
-        </q-item-label>
-
-        <EssentialLink
-          v-for="link in linksList"
-          :key="link.title"
-          v-bind="link"
-        />
-      </q-list>
-    </q-drawer>
-
-    <q-page-container>
-      <router-view />
-    </q-page-container>
-  </q-layout>
+    <Transition name='fade'>
+    <q-header v-if="isHeaderVisible" elevated class='rounded-lg bg-neutral-900 m-2'>
+        <q-toolbar>
+          <q-btn flat @click="drawer = !drawer" round dense icon="menu"/>
+                    <Transition name='fade'>
+                        <q-toolbar-title class='font-extrabold ml-2' :key="useRoute().fullPath">
+                           {{ getCorrectLanguageTitle }} 
+                        </q-toolbar-title>
+                    </Transition>
+        </q-toolbar>
+      </q-header>
+      </Transition>
+  <q-drawer
+        v-model="drawer"
+        class='w-auto bg-neutral-900 text-white'
+      >
+        <q-scroll-area class="fit">
+          <q-list padding class="menu-list" v-for='item in drawer_items' :key='item.title_en'>
+          <div class='mt-2 pb-4'>
+            <q-item clickable v-ripple :to='item.link'>
+              <q-item-section avatar> 
+                <q-icon :name='item.icon' />
+              </q-item-section>
+              <q-item-section @click="item.title_en === 'Log Out' ? handleLogOut() : null" class='text-base font-bold'>
+                {{ getItem<string>('language') === "ru" ? item.title_ru:
+                   item.title_en 
+                }}
+              </q-item-section>
+            </q-item>
+            </div>
+            </q-list>
+        </q-scroll-area>
+      </q-drawer>
+            <q-page-container>
+                <router-view/>
+            </q-page-container>
+        </q-layout>
+  </div>
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
-import EssentialLink, { EssentialLinkProps } from 'components/EssentialLink.vue';
+    import { getItem, removeItem } from 'src/utils/localStorage';
+    import {ref, onMounted, onBeforeMount, computed } from 'vue';
+    import { useRouter, useRoute  } from 'vue-router';
+    const router = useRouter()
+    function handleLogOut(): void {
+        removeItem('token')
+        router.push('login')
+    } //
+    const getCorrectLanguageTitle = computed<string>(() => {
+        const language = getItem<string>("language")
+        if (language === 'ru') {
+            return useRoute().fullPath === "/main" ? "Worthy":
+                   useRoute().fullPath === "/settings" ? "Настройки":
+                   "Информация"
+        } else {
+            return useRoute().fullPath === "/main" ? "Worthy":
+                   useRoute().fullPath === "/settings" ? "Settings":
+                   "Information"
+        }
+    })
 
-defineOptions({
-  name: 'MainLayout'
-});
-
-const linksList: EssentialLinkProps[] = [
-  {
-    title: 'Docs',
-    caption: 'quasar.dev',
-    icon: 'school',
-    link: 'https://quasar.dev'
-  },
-  {
-    title: 'Github',
-    caption: 'github.com/quasarframework',
-    icon: 'code',
-    link: 'https://github.com/quasarframework'
-  },
-  {
-    title: 'Discord Chat Channel',
-    caption: 'chat.quasar.dev',
-    icon: 'chat',
-    link: 'https://chat.quasar.dev'
-  },
-  {
-    title: 'Forum',
-    caption: 'forum.quasar.dev',
-    icon: 'record_voice_over',
-    link: 'https://forum.quasar.dev'
-  },
-  {
-    title: 'Twitter',
-    caption: '@quasarframework',
-    icon: 'rss_feed',
-    link: 'https://twitter.quasar.dev'
-  },
-  {
-    title: 'Facebook',
-    caption: '@QuasarFramework',
-    icon: 'public',
-    link: 'https://facebook.quasar.dev'
-  },
-  {
-    title: 'Quasar Awesome',
-    caption: 'Community Quasar projects',
-    icon: 'favorite',
-    link: 'https://awesome.quasar.dev'
-  }
-];
-
-const leftDrawerOpen = ref(false);
-
-function toggleLeftDrawer () {
-  leftDrawerOpen.value = !leftDrawerOpen.value;
-}
+    onBeforeMount((): void => {   
+        if (!getItem<string>('token')) {
+            router.push('login')
+        }
+    })
+    let isHeaderVisible = ref(false)
+    onMounted((): void => {
+        setTimeout((): void => {
+            isHeaderVisible.value = true
+        }, 100)
+    })
+    let drawer = ref(false);
+    const drawer_items = ref([
+        {title_en: "Main", title_ru: "Главная", icon: "home", link: '/main'},
+        {title_en: "Settings", title_ru: "Настройки", icon: 'settings', link: '/settings'},
+        {title_en: "Info", title_ru: "Информация", icon: 'info', link: '/info'},
+        {title_en: "Log Out", title_ru: "Выйти", icon: "logout", link: '/login'},
+    ])
 </script>
+
+<style lang='scss'>
+.q-layout__shadow {
+  width: 0%;
+}
+
+.fade-enter-active {
+  transition: opacity 0.5s;
+}
+.fade-enter-from {
+  opacity: 0;
+}
+.fade-enter-to {
+    opacity: 1
+}
+</style>
