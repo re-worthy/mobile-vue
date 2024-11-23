@@ -11,8 +11,10 @@
 </template>
 
 <script setup lang="ts">
-    import {ref, onMounted, onUnmounted} from 'vue';
+    import {removeItem} from 'src/utils/localStorage';
+    import {ref, onMounted, onUnmounted, onBeforeMount} from 'vue';
     let ifLoginMount = ref(false)
+    onBeforeMount(() => removeItem('token'))
     onMounted(() =>
         setTimeout(() => {
             ifLoginMount.value = true

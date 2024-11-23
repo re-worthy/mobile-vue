@@ -1,7 +1,7 @@
 <template>
   <q-list v-for="item in items" :key="item.title_en">
     <Transition name='fade'>
-    <div v-if='ifInfoMount' class='bg-neutral-900 rounded-lg w-auto h-auto p-4 mt-6' 
+    <div v-if='ifInfoMount' class='bg-neutral-900 rounded-lg w-auto h-30 p-4 mt-2' 
          @click.prevent='redirectClick(item.link)'
     >
       <q-item icon='info'>
@@ -17,7 +17,7 @@
             }}
           </q-item-label>
         </q-item-section>
-            <q-avatar class='mt-2' text-color="white" :icon="item.icon" />
+            <q-avatar class='mt-2' text-color='white' :icon="item.icon" />
         </q-item>
     </div>
     </Transition>
@@ -44,3 +44,4 @@ import {ref, onMounted} from 'vue';
         window.open(link, '_blank');
     }
 </script>
+

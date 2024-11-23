@@ -1,7 +1,7 @@
 <template>
     <Transition name='fade'>
-    <div v-if="ifLoginMount" class='flex items-center justify-center h-screen'>
-         <div class="w-auto h-auto bg-neutral-900 text-white rounded-lg   p-2 pb-4 m-4">
+    <div v-if="ifLoginMount" class='flex items-center justify-center h-auto'>
+         <div class="w-auto h-auto bg-neutral-900 text-white rounded-lg p-2 pb-4 m-4">
 
             <div class='flex justify-center' >
                 <h1 class='text-h5 m-4'> 
@@ -26,8 +26,8 @@
                 </Transition>
             </div>
             <div class='grid sm:grid-cols-2 md:grid-cols-4 p-4'>
-                <button type='submit' class="btn btn-outline btn-accent md:mr-4 mb-4">Submit</button>
-                <button class="btn btn-info btn-outline" @click.prevent="changeAuthShow()">
+                <button type='submit' class="btn btn-outline btn-accent md:mr-4 mb-4 active:bg-emerald-900">Submit</button>
+                <button class="btn btn-info btn-outline active:bg-sky-900" @click.prevent="changeAuthShow()">
                     {{  auth_show == 'Sign In' ? 'Sign Up':  'Sign In' }}
                 </button>
             </div>

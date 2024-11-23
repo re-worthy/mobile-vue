@@ -1,6 +1,6 @@
 <template>
     <Transition name='fade'>
-    <div v-if='ifSettingsMount' class='bg-neutral-900 rounded-lg w-auto h-auto p-4 mt-6'>
+    <div v-if='ifSettingsMount' class='bg-neutral-900 rounded-lg w-auto h-auto p-4 mt-2'>
         <ul class="border-class menu bg-neutral-900 border-current border rounded-box">
   <li>
     <details class='font-bold'>
