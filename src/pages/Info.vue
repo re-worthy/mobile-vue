@@ -27,7 +27,8 @@
 <script setup lang='ts'>
     import {getItem} from 'src/utils/localStorage';
 import {ref, onMounted} from 'vue';
-    let ifInfoMount = ref(false) 
+
+    let ifInfoMount = ref<boolean>(false) 
     onMounted(() => 
         setTimeout( () => {
             ifInfoMount.value = true
@@ -35,7 +36,7 @@ import {ref, onMounted} from 'vue';
     )
     const items = ref([
         { title_en: "GitHub", title_ru: "GitHub", icon: "code", description_en: "View open source code.", description_ru: "Открыть исходный код.",
-          link: "https://github.com/readyyyk/worthy"},
+          link: "https://github.com/re-worthy/mobile-vue"},
         { title_en: "Donate", title_ru: "Донат",icon: "currency_bitcoin", description_en: "For a cup of coffee.", description_ru: "На чашечку кофе.",link: 'https://google.com' },
         { title_en: "License", title_ru: "Лицензия", icon: 'gpp_good', description_en: "Free license GPL-3.", description_ru: "Свободная лциензия GPL-3.",link: "https://www.gnu.org/licenses/gpl-3.0.en.html" }
 

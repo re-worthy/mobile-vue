@@ -5,8 +5,8 @@
             <q-list class="btm-nav w-auto bg-neutral-900 m-2 rounded-lg">
                 <q-item :active="false" :to='item.link' v-ripple="false" v-for='item in drawer_items' :key='item.icon'>
                     <q-item-section>
-                        <button to="item.link">
-                            <q-icon size="1.5rem" :style="useRoute().fullPath === item.link ? 'color: oklch(var(--su))': ''" :name='item.icon'/>
+                        <button :to="item.link">
+                            <q-icon size="1.5rem" :class="useRoute().fullPath === item.link ? 'text-success': ''" :name='item.icon'/>
                         </button>
                     </q-item-section>
                 </q-item> 
@@ -16,7 +16,7 @@
             <router-view/>
       </q-page-container>
     </q-layout>
-  </div>
+ </div> 
 </template>
 
 <script setup lang="ts">
@@ -58,4 +58,5 @@
 .fade-enter-to {
     opacity: 1
 }
+
 </style>

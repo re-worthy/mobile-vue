@@ -1,34 +1,26 @@
 <template>
     <Transition name='fade'>
-    <div v-if="ifLoginMount" class='flex items-center justify-center h-auto'>
-         <div class="w-auto h-auto bg-neutral-900 text-white rounded-lg p-2 pb-4 m-4">
-
-            <div class='flex justify-center' >
-                <h1 class='text-h5 m-4'> 
-                    {{ auth_show }}
-                </h1>
-            </div>
-            <Transition name='fade'>
-            <div :key='resultSubmit.message' v-if="resultSubmit.code !== 0" class='flex justify-start ml-5'>
-                <h1 class='text-base font-extrabold mr-2'
-                :class="resultSubmit.code > 0 ? 'text-rose-600' : 'text-green-600'"
-                >
-                    {{ resultSubmit.message }}
-                </h1>
-            </div>
-            </Transition>
-            <form @submit.prevent="auth_show == 'Sign In' ? submitLogin() : submitRegister()">
-            <div class='flex justify-start pl-4 pr-4'>
-                <input v-model='username' style='background-color: #363434;' type="text" placeholder="Username" class="mt-4 mb-6 input w-full input-base-content" />
-                <input type='password' v-model='password' style='background-color: #363434;' placeholder="Password" class="input mb-6 w-full input-base-content">
-                <Transition name='fade'>
-                <input type='password' v-show="auth_show == 'Sign Up'" v-model='password_repeat' style='background-color: #363434;' placeholder="Repeat Password" class="input w-full mb-6 input-base-content"/>
-                </Transition>
+    <div v-if="ifLoginMount" class='flex items-center justify-center h-auto font-bold'>
+         <div class="w-auto h-auto bg-neutral-900 text-white rounded-lg p-2 pb-4 mb-4 ml-4 mr-4 translate-y-1/3">
+        <div class='flex justify-center mb-8' >
+            <label class="swap text-h5 mt-4 font-bold">
+                <input type="checkbox" disabled :checked="auth_show === 'Sign In' ? true: false" />
+                <div class="swap-on">Sign In</div>
+                <div class="swap-off">Sign Up</div>
+            </label> 
+            </div> 
+            <form @submit.prevent="submitAuthorization(auth_show)">
+            <div class='flex justify-start pl-4 pr-4'> 
+                    <input v-model='username' style='background-color: #363434;' type="text" placeholder="Username" class="mb-6 input w-full input-base-content"/>
+                                    <input type='password' v-model='password' style='background-color: #363434;' placeholder="Password" class="input mb-6 w-full input-base-content">
+                    <input :disabled="auth_show === 'Sign In'" type='password' v-model='password_repeat' style='background-color: #363434;' placeholder="Repeat Password" class="input input-transition w-full mb-6 input-base-content"/>
             </div>
             <div class='grid sm:grid-cols-2 md:grid-cols-4 p-4'>
-                <button type='submit' class="btn btn-outline btn-accent md:mr-4 mb-4 active:bg-emerald-900">Submit</button>
+                <div :class="resultSubmit.code > 0 ? 'tooltip-open tooltip tooltip-error mb-1': ''" :data-tip="resultSubmit.message"> 
+</div>
+                <button type='submit' class="btn btn-outline btn-success md:mr-4 mb-4 active:bg-emerald-950">Submit</button>
                 <button class="btn btn-info btn-outline active:bg-sky-900" @click.prevent="changeAuthShow()">
-                    {{  auth_show == 'Sign In' ? 'Sign Up':  'Sign In' }}
+                    {{  auth_show === 'Sign In' ? 'Sign Up':  'Sign In' }}
                 </button>
             </div>
              </form>
@@ -45,55 +37,49 @@
         if (getItem<string>('token')) {
             router.push('main')
         }
+        setItem<string>("language", "en")
     })
     onMounted(() => setTimeout(() => {
         ifLoginMount.value = true
     }, 100))
     const router = useRouter()
-    let ifLoginMount = ref(false)
-    let auth_show = ref('Sign In')
-    let password = ref('');
-    let username = ref('');
-    let password_repeat = ref('')
-    let resultSubmit = ref({
+    let ifLoginMount = ref<boolean>(false)
+    let auth_show = ref<string>('Sign In')
+    let password = ref<string>('');
+    let username = ref<string>('');
+    let password_repeat = ref<string>('')
+    let resultSubmit = ref<Result>({
         code: 0,
         message: ''
     })
-    function validateField(form: string): string | number {
-        if (password.value.trim().length < 6 || username.value.trim().length < 6) {
-            return "Password and username must be at least 6 characters long."
+    type Result = {
+        code: number;
+        message: string;
+    }
+    function validateField(form: string): Result {
+        if (username.value.trim().length < 6) {
+            return {code: 5, message: "Username must be at least 6 chars."}
+        } else if (password.value.trim().length < 6) {
+            return {code: 1, message: "Password must be at least 6 chars."}
         }
+        
         if (form === "Sign Up") {
             if (password_repeat.value.trim() !== password.value.trim()) {
-                return 'The passwords do not match.'
+                return {code: 2, message: 'The passwords do not match.'}
             }
         } 
-        return 1
+        return {code: 3, message: ''}
         }
 
-    function submitLogin() {
-        const result: string | number = validateField("Sign In")
-        if (typeof result === 'number') {
+    function submitAuthorization(mode: string) {
+        const result = validateField(mode)
+        if (result.code === 3) { 
             setItem<string>("token", "token")
-             router.push({ path: '/main' }) 
-        }
-        else {
-            resultSubmit.value.message = result
-            resultSubmit.value.code = 1
-        }
-    }
-
-    function submitRegister(): void {
-        const result: string | number = validateField('Sign Up')
-        if (typeof result === 'number') {
-            setItem<string>('token', 'token')
             router.push({ path: '/main' }) 
         }
-        else {
-            resultSubmit.value.message = result
-            resultSubmit.value.code = 2
-        }
-    }
+        resultSubmit.value.message = result.message
+        resultSubmit.value.code = result.code
+    } 
 
     function changeAuthShow(): void {
         password.value = ''
@@ -118,5 +104,12 @@
 .fade-enter-to, .fade-leave-from {
   opacity: 1; 
   }
+
+.input-transition {
+  transition: background-color 0.3s ease, opacity 0.3s ease;
+}
+
+
+
 
 </style>

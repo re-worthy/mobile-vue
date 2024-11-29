@@ -11,10 +11,13 @@
 </template>
 
 <script setup lang="ts">
-    import {removeItem} from 'src/utils/localStorage';
+    import {removeItem, getItem, setItem} from 'src/utils/localStorage';
     import {ref, onMounted, onUnmounted, onBeforeMount} from 'vue';
     let ifLoginMount = ref(false)
-    onBeforeMount(() => removeItem('token'))
+    onBeforeMount(() => {
+        removeItem('token')
+        getItem<string>("language") === null ? setItem<string>("language", "en"): null
+    })
     onMounted(() =>
         setTimeout(() => {
             ifLoginMount.value = true

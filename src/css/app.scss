@@ -6,8 +6,9 @@
 @tailwind utilities;
 
 
+/* Firefox */
 @font-face{
-    font-family: "Inter";
+    font-family: "Montserrat";
     src: url('../assets/Montserrat-ExtraLight.woff2') format('woff2');
     font-weight: normal;
     font-style: normal;
@@ -15,9 +16,16 @@
 
 html, body {
     background-color: #262525;
-    font-family: 'Inter', sans-serif;
+    font-family: 'Montserrat', sans-serif;
+    overflow: auto;
+    -webkit-overflow-scrolling: touch;
     scrollbar-width: none;
 }
-body::-webkit-scrollbar {
-  display: none;
-  }
+
+::-webkit-scrollbar {
+   display: none;
+}
+
+* {
+    -ms-overflow-style: none; 
+}
