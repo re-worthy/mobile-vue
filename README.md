@@ -20,5 +20,10 @@ quasar dev
 quasar build
 ```
 
+### Build the app for android
+```bash
+quasar build -m capacitor -T android
+```
+
 ### Customize the configuration
 See [Configuring quasar.config.js](https://v2.quasar.dev/quasar-cli-vite/quasar-config-js).
