@@ -12,13 +12,13 @@
             <form @submit.prevent="submitAuthorization(auth_show)">
             <div class='flex justify-start pl-4 pr-4'> 
                     <input v-model='username' style='background-color: #363434;' type="text" placeholder="Username" class="mb-6 input w-full input-base-content"/>
-                                    <input type='password' v-model='password' style='background-color: #363434;' placeholder="Password" class="input mb-6 w-full input-base-content">
+                    <input type='password' v-model='password' style='background-color: #363434;' placeholder="Password" class="input mb-6 w-full input-base-content">
                     <input :disabled="auth_show === 'Sign In'" type='password' v-model='password_repeat' style='background-color: #363434;' placeholder="Repeat Password" class="input input-transition w-full mb-6 input-base-content"/>
             </div>
-            <div class='grid sm:grid-cols-2 md:grid-cols-4 p-4'>
+            <div class='flex flex-col p-4'>
                 <div :class="resultSubmit.code > 0 ? 'tooltip-open tooltip tooltip-error mb-1': ''" :data-tip="resultSubmit.message"> 
 </div>
-                <button type='submit' class="btn btn-outline btn-success md:mr-4 mb-4 active:bg-emerald-950">Submit</button>
+                <button type='submit' class="btn btn-outline btn-success mb-4 active:bg-emerald-950">Submit</button>
                 <button class="btn btn-info btn-outline active:bg-sky-900" @click.prevent="changeAuthShow()">
                     {{  auth_show === 'Sign In' ? 'Sign Up':  'Sign In' }}
                 </button>
@@ -71,7 +71,7 @@
         return {code: 3, message: ''}
         }
 
-    function submitAuthorization(mode: string) {
+    function submitAuthorization(mode: string): void {
         const result = validateField(mode)
         if (result.code === 3) { 
             setItem<string>("token", "token")
@@ -87,7 +87,7 @@
         password_repeat.value = ''
         resultSubmit.value.message = ''
         resultSubmit.value.code = 0
-        auth_show.value == 'Sign In' ? (auth_show.value = 'Sign Up'): (auth_show.value = 'Sign In')
+        auth_show.value === 'Sign In' ? (auth_show.value = 'Sign Up'): (auth_show.value = 'Sign In')
     }
 </script>
 

@@ -6,7 +6,7 @@
 @tailwind utilities;
 
 
-/* Firefox */
+
 @font-face{
     font-family: "Montserrat";
     src: url('../assets/Montserrat-ExtraLight.woff2') format('woff2');
@@ -17,15 +17,28 @@
 html, body {
     background-color: #262525;
     font-family: 'Montserrat', sans-serif;
-    overflow: auto;
     -webkit-overflow-scrolling: touch;
     scrollbar-width: none;
+    @apply select-none;
 }
 
-::-webkit-scrollbar {
-   display: none;
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+    -webkit-appearance: none;  
+    margin: 0;
 }
 
-* {
-    -ms-overflow-style: none; 
+input[type="number"] {
+    -moz-appearance: textfield; 
 }
+
+.modal-box::-webkit-scrollbar {
+    width: 0px;
+    background: transparent; 
+}
+
+.modal-box {
+    scrollbar-width: none; 
+}
+
+

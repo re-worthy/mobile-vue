@@ -22,7 +22,7 @@
 </ul> 
 </div>
 <div class='bg-neutral-900 rounded-lg w-auto h-auto p-4 mt-4 menu-currency'>
-<ul class="border-class menu bg-neutral-900 border-current border rounded-box">
+<ul class="border-class menu bg-neutral-900 border-current border rounded-box element-bar">
   <li>
     <details class='font-bold'>
       <summary class='text-white text-lg' onclick="my_modal_2.showModal()">
@@ -35,7 +35,7 @@
 </div>
 <dialog id="my_modal_2" class="modal">
   <div class="border-white border modal-box bg-neutral-900 translate-y-1/2 flex flex-row flex-nowrap overflow-x-auto no-scrollbar p-4"> 
-        <p v-for="item in filteredListCurrency()" :key='item.name' class='bg-neutral-900 font-bold text-lg border-r border-gray-200 pr-4 pl-4 hover:bg-neutral-800' @click="closeModal(item.currency.symbol)"
+        <p v-for="item in filteredListCurrency()" style='cursor: pointer;' :key='item.name' class='bg-neutral-900 font-bold text-lg border-r border-gray-200 pr-4 pl-4 hover:bg-neutral-800' @click="closeModal(item.currency.symbol)"
         :class="stateCurrency === item.currency.symbol ? 'text-success': 'text-white'"> 
             {{ item.currency.code }} 
         </p>
@@ -65,13 +65,13 @@
         {title: "Russian", key: "ru"},
     ])
 
-    onMounted(() => {
-        setTimeout( () => {
+    onMounted((): void => {
+        setTimeout((): void => {
             ifSettingsMount.value = true
         }, 100)
     })
 
-    function closeModal(symbol: string | boolean) {
+    function closeModal(symbol: string | boolean): void {
         const modal = document.getElementById('my_modal_2') as HTMLDialogElement;
         setItem('currency', symbol)
         typeof symbol === "string" ? (stateCurrency.value = symbol): null
@@ -79,7 +79,7 @@
     }
     
     
-    function filteredListCurrency() {
+    function filteredListCurrency(): ListCurrency[] {
         return getCountryList().filter((item, index, self) => {
             const isUnique = index === self.findIndex((t) => item.currency.symbol === t.currency.symbol);
             const isNotUniversalCurrency = item.currency.code !== "No Universal Currency";
@@ -90,6 +90,24 @@
     function selectLanguage(key: string): void {
         setItem<string>('language', key)
         location.reload()
+    }
+
+    type ListCurrency = {
+        id: number,
+        name: string,
+        isoAlpha2: string,
+        isoAlpha3: string,
+        isoNumeric: number,
+        currency: Currency,
+        flag: string,
+        callingCodes: string,
+        languages: string[],
+        emoji: string
+    }
+    type Currency = {
+        code: string,
+        name: string,
+        symbol: string | boolean
     }
 </script>
 

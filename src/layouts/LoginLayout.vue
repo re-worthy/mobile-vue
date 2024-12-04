@@ -13,7 +13,7 @@
 <script setup lang="ts">
     import {removeItem, getItem, setItem} from 'src/utils/localStorage';
     import {ref, onMounted, onUnmounted, onBeforeMount} from 'vue';
-    let ifLoginMount = ref(false)
+    let ifLoginMount = ref<boolean>(false)
     onBeforeMount(() => {
         removeItem('token')
         getItem<string>("language") === null ? setItem<string>("language", "en"): null
